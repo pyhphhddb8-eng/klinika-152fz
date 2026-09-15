@@ -864,7 +864,7 @@ npm run check
 
 <p class="lid">Оставьте имя и телефон — администратор перезвонит, подберёт врача и подтвердит время. Ни жалоб, ни диагнозов на сайте: об этом поговорим на приёме.</p>
 
-<form class="zapis__forma" id="zapis" novalidate>
+<form class="zapis__forma" id="zapis">
   <div class="pole">
     <label for="imya">Как к вам обращаться</label>
     <input type="text" id="imya" name="imya" autocomplete="name" placeholder="Иван Петров" required>
@@ -1005,8 +1005,8 @@ class ТестФормы(unittest.TestCase):
         self.assertNotIn("fetch(", self.текст)
 
     def test_нет_полей_про_здоровье(self):
-        for слово in ("жалоб", "симптом", "диагноз", "паспорт", "СНИЛС", "полис"):
-            куски = self.текст.split("<form")[1].split("</form>")[0]
+        куски = self.текст.split("<form")[1].split("</form>")[0]
+        for слово in ("жалоб", "симптом", "диагноз", "болезн", "рожден", "паспорт", "СНИЛС", "полис"):
             self.assertNotIn(слово, куски, "в форме встретилось «%s»" % слово)
 ```
 
