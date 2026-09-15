@@ -65,7 +65,7 @@ class ТестШрифта(unittest.TestCase):
             with open(os.path.join(КОРЕНЬ, имя), encoding="utf-8") as ф:
                 текст = ф.read()
             self.assertNotIn("http://", текст, имя)
-            self.assertNotIn("https://fonts.", текст, имя)
+            self.assertNotIn("https://", текст, имя)
         self.assertNotIn("http", self.css.replace("data:font", ""))
 
     def test_шрифт_не_раздут(self):
