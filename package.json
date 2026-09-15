@@ -1,0 +1,16 @@
+{
+  "name": "klinika-152fz",
+  "version": "1.0.0",
+  "private": "true",
+  "type": "module",
+  "description": "Комплект 152-ФЗ для сайта с онлайн-записью",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "python3 tools/test_build.py -v",
+    "check": "node tools/check.mjs",
+    "shot": "node tools/shot.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

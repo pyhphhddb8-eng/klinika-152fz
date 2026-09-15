@@ -169,6 +169,108 @@ a:hover {
   display: none;
 }
 
+.lid {
+  font-size: 19px;
+  color: var(--muted);
+  margin: 0 0 28px;
+}
+
+.zapis__forma {
+  padding: 22px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg-soft);
+}
+.pole {
+  margin-bottom: 16px;
+}
+.pole label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.pole input,
+.pole select {
+  width: 100%;
+  padding: 11px 12px;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #b9c3cb;
+  border-radius: 8px;
+}
+.pole input:focus,
+.pole select:focus,
+#soglasie:focus-visible,
+#otpravit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pole input::placeholder {
+  color: #6b7680;
+}
+
+.soglasie-stroka {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 22px 0 10px;
+}
+.soglasie-stroka input {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+}
+.soglasie-stroka label {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.podskazka {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.oshibka {
+  margin: 0 0 14px;
+  padding: 11px 13px;
+  font-size: 15px;
+  color: #7a1b1b;
+  background: #fdecec;
+  border: 1px solid #e7b4b4;
+  border-radius: 8px;
+}
+.oshibka[hidden],
+.itog[hidden] {
+  display: none;
+}
+#otpravit {
+  width: 100%;
+  padding: 13px 20px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+}
+#otpravit:hover {
+  background: var(--accent-dark);
+}
+.itog {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: #0f3d32;
+  background: #e7f4ef;
+  border: 1px solid #9ccdbd;
+  border-radius: 8px;
+}
+
 /* Печать: документ должен читаться в PDF, интерфейс — нет. */
 @media print {
   .shapka,

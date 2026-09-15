@@ -109,5 +109,28 @@ class ТестОбщихБлоков(unittest.TestCase):
             self.assertIn('class="cookie" hidden', текст, имя)
 
 
+class ТестФормы(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        build.build_all(КОРЕНЬ)
+        with open(os.path.join(КОРЕНЬ, "index.html"), encoding="utf-8") as ф:
+            cls.текст = ф.read()
+
+    def test_галочка_не_предзаполнена_в_разметке(self):
+        import re
+        теги = re.findall(r"<input[^>]*type=\"checkbox\"[^>]*>", self.текст)
+        self.assertEqual(len(теги), 1, "ожидалась ровно одна галочка, найдено %d" % len(теги))
+        self.assertNotIn("checked", теги[0])
+
+    def test_форма_никуда_не_отправляет(self):
+        self.assertNotIn("action=", self.текст.split("<form")[1].split(">")[0])
+        self.assertNotIn("fetch(", self.текст)
+
+    def test_нет_полей_про_здоровье(self):
+        for слово in ("жалоб", "симптом", "диагноз", "паспорт", "СНИЛС", "полис"):
+            куски = self.текст.split("<form")[1].split("</form>")[0]
+            self.assertNotIn(слово, куски, "в форме встретилось «%s»" % слово)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
