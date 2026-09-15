@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Сборка страниц: реквизиты из content/site.json подставляются в общий шаблон.
 # Запуск: python3 build.py
+import base64
 import json
 import os
 import re
@@ -63,12 +64,34 @@ def читать(путь):
         return ф.read()
 
 
+def build_fonts_css(root):
+    """Вшивает подрезанный шрифт в CSS строкой base64: страница не ходит наружу."""
+    путь_шрифта = os.path.join(root, "assets", "fonts", "golos-text.woff2")
+    with open(путь_шрифта, "rb") as ф:
+        строка = base64.b64encode(ф.read()).decode("ascii")
+    css = (
+        "/* Golos Text, лицензия OFL — текст в assets/fonts/src/OFL.txt.\n"
+        "   Файл создаётся сборщиком, править руками бессмысленно. */\n"
+        "@font-face{\n"
+        "  font-family:'Golos Text';\n"
+        "  src:url(data:font/woff2;base64,%s) format('woff2');\n"
+        "  font-weight:400 700;\n"
+        "  font-display:swap;\n"
+        "}\n" % строка
+    )
+    путь = os.path.join(root, "assets", "fonts.css")
+    with open(путь, "w", encoding="utf-8") as ф:
+        ф.write(css)
+    return путь
+
+
 def build_all(root):
     данные = load_site(root)
     шаблон = читать(os.path.join(root, "content", "template.html"))
     записано = []
 
     os.makedirs(os.path.join(root, "assets"), exist_ok=True)
+    build_fonts_css(root)
     shutil.copyfile(
         os.path.join(root, "content", "style.css"),
         os.path.join(root, "assets", "style.css"),

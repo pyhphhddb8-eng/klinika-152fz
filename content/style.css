@@ -1,0 +1,131 @@
+/* Общий стиль всех четырёх страниц. Правится здесь, сборщик копирует в assets/. */
+:root {
+  --text: #1b1f23;
+  --muted: #4a5560;
+  --line: #dfe4e8;
+  --bg: #ffffff;
+  --bg-soft: #f4f7f9;
+  --accent: #0b5c4b;
+  --accent-dark: #084335;
+  --warn-bg: #fff6e5;
+  --warn-line: #e0b872;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  font-family:
+    "Golos Text",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+}
+img {
+  max-width: 100%;
+}
+a {
+  color: var(--accent-dark);
+}
+a:hover {
+  color: var(--accent);
+}
+
+.shapka {
+  border-bottom: 1px solid var(--line);
+  padding: 16px 20px;
+}
+.shapka__logo {
+  font-weight: 700;
+  font-size: 19px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.stranica {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 20px 56px;
+}
+.stranica h1 {
+  font-size: 30px;
+  line-height: 1.25;
+  margin: 0 0 16px;
+}
+.stranica h2 {
+  font-size: 22px;
+  line-height: 1.3;
+  margin: 32px 0 10px;
+}
+.stranica h3 {
+  font-size: 19px;
+  margin: 24px 0 8px;
+}
+.stranica p,
+.stranica li {
+  color: var(--text);
+}
+.stranica ul,
+.stranica ol {
+  padding-left: 22px;
+}
+
+.podval {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  padding: 24px 20px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.podval a {
+  color: var(--accent-dark);
+}
+
+@media (max-width: 420px) {
+  .stranica h1 {
+    font-size: 25px;
+  }
+  .stranica {
+    padding: 20px 16px 40px;
+  }
+}
+
+/* Печать: документ должен читаться в PDF, интерфейс — нет. */
+@media print {
+  .shapka,
+  .cookie,
+  .zapis__forma,
+  .demo-note {
+    display: none !important;
+  }
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+  .stranica {
+    max-width: none;
+    padding: 0;
+  }
+  .stranica h2 {
+    page-break-after: avoid;
+  }
+  .stranica p,
+  .stranica li {
+    page-break-inside: avoid;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #444;
+  }
+}

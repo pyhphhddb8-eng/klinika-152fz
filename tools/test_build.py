@@ -50,5 +50,28 @@ class ТестСборки(unittest.TestCase):
             self.assertIn('name="robots" content="noindex, nofollow"', текст, имя)
 
 
+class ТестШрифта(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        build.build_all(КОРЕНЬ)
+        with open(os.path.join(КОРЕНЬ, "assets", "fonts.css"), encoding="utf-8") as ф:
+            cls.css = ф.read()
+
+    def test_шрифт_вшит_строкой_base64(self):
+        self.assertIn("data:font/woff2;base64,", self.css)
+
+    def test_нет_запросов_наружу(self):
+        for имя in ("index.html", "privacy.html", "consent.html", "terms.html"):
+            with open(os.path.join(КОРЕНЬ, имя), encoding="utf-8") as ф:
+                текст = ф.read()
+            self.assertNotIn("http://", текст, имя)
+            self.assertNotIn("https://fonts.", текст, имя)
+        self.assertNotIn("http", self.css.replace("data:font", ""))
+
+    def test_шрифт_не_раздут(self):
+        размер = os.path.getsize(os.path.join(КОРЕНЬ, "assets", "fonts", "golos-text.woff2"))
+        self.assertLess(размер, 120 * 1024, "подрезка не сработала, шрифт %d байт" % размер)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
