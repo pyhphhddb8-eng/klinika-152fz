@@ -99,6 +99,76 @@ a:hover {
   }
 }
 
+.demo-note {
+  margin: 0;
+  padding: 10px 20px;
+  background: var(--warn-bg);
+  border-bottom: 1px solid var(--warn-line);
+  font-size: 15px;
+  color: #4a3c1d;
+  text-align: center;
+}
+.pravovaya-ogovorka {
+  margin-top: 40px;
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border-left: 3px solid var(--accent);
+  font-size: 15px;
+  color: var(--muted);
+}
+.podval__rekvizity {
+  margin: 0 0 16px;
+}
+.podval__ssylki {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.podval__god {
+  margin: 0;
+  font-size: 14px;
+}
+
+.cookie {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(20, 30, 40, 0.14);
+  font-size: 15px;
+}
+.cookie p {
+  margin: 0;
+  flex: 1 1 240px;
+}
+.cookie button {
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.cookie button:hover {
+  background: var(--accent-dark);
+}
+.cookie[hidden] {
+  display: none;
+}
+
 /* Печать: документ должен читаться в PDF, интерфейс — нет. */
 @media print {
   .shapka,

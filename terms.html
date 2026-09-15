@@ -1,25 +1,63 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>Пользовательское соглашение — Клиника «Ясень»</title>
-    <meta name="description" content="Пользовательское соглашение демонстрационного сайта записи на приём." />
-    <link rel="stylesheet" href="assets/fonts.css" />
-    <link rel="stylesheet" href="assets/style.css" />
-  </head>
-  <body>
-    <header class="shapka">
-      <a class="shapka__logo" href="index.html">Клиника «Ясень»</a>
-    </header>
-    <main class="stranica"><h1>Пользовательское соглашение</h1>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Пользовательское соглашение — Клиника «Ясень»</title>
+<meta name="description" content="Пользовательское соглашение демонстрационного сайта записи на приём.">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<p class="demo-note">Демонстрационный сайт: клиника вымышленная, реквизиты условные, форма ничего не отправляет.</p>
+
+<header class="shapka">
+  <a class="shapka__logo" href="index.html">Клиника «Ясень»</a>
+</header>
+
+<main class="stranica">
+<h1>Пользовательское соглашение</h1>
+
+<p class="pravovaya-ogovorka">Это типовой комплект документов, а не юридическая консультация. Требования меняются, спорные места и всё, что касается конкретной деятельности клиники, смотрит её юрист.</p>
 </main>
-    <footer class="podval">
-      <p>
-        Общество с ограниченной ответственностью «Клиника Ясень» (ООО «Клиника Ясень»), ИНН 7700000000, ОГРН 1000000000000.
-        000000, г. Москва, ул. Вымышленная, д. 1, пом. 1. +7 (495) 000-00-00, info@klinika-yasen.example.
-      </p>
-    </footer>
-  </body>
+
+<footer class="podval">
+  <p class="podval__rekvizity">Общество с ограниченной ответственностью «Клиника Ясень»<br>
+  ИНН 7700000000, ОГРН 1000000000000<br>
+  000000, г. Москва, ул. Вымышленная, д. 1, пом. 1<br>
+  <a href="tel:+74950000000">+7 (495) 000-00-00</a>, <a href="mailto:info@klinika-yasen.example">info@klinika-yasen.example</a><br>
+  Медицинская лицензия: Л00-00000-00/00000000 (условный номер, лицензии не существует)</p>
+  <nav class="podval__ssylki">
+    <a href="index.html">Запись на приём</a>
+    <a href="privacy.html">Политика обработки персональных данных</a>
+    <a href="consent.html">Согласие на обработку</a>
+    <a href="terms.html">Пользовательское соглашение</a>
+  </nav>
+  <p class="podval__god">© 2026 ООО «Клиника Ясень». Реквизиты условные: компания не существует.</p>
+</footer>
+
+<div class="cookie" hidden>
+  <p>Сайт использует cookie, необходимые для его работы. Подробнее — в <a href="privacy.html">политике обработки персональных данных</a>.</p>
+  <button type="button" id="cookie-soglasen">Понятно</button>
+</div>
+
+<script>
+// Cookie-баннер: показываем один раз. Хранилище может быть недоступно
+// (приватное окно, открытие файла с диска) — тогда просто не показываем.
+(function () {
+  var баннер = document.querySelector('.cookie');
+  var кнопка = document.getElementById('cookie-soglasen');
+  var КЛЮЧ = 'cookie-ok';
+  var хранилище = null;
+  try { хранилище = window.localStorage; хранилище.getItem(КЛЮЧ); } catch (e) { хранилище = null; }
+  if (!хранилище || хранилище.getItem(КЛЮЧ) === '1') { return; }
+  баннер.hidden = false;
+  кнопка.addEventListener('click', function () {
+    баннер.hidden = true;
+    try { хранилище.setItem(КЛЮЧ, '1'); } catch (e) {}
+  });
+})();
+</script>
+</body>
 </html>

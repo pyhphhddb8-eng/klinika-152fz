@@ -73,5 +73,41 @@ class ТестШрифта(unittest.TestCase):
         self.assertLess(размер, 120 * 1024, "подрезка не сработала, шрифт %d байт" % размер)
 
 
+class ТестОбщихБлоков(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        build.build_all(КОРЕНЬ)
+        cls.страницы = {}
+        for стр in build.PAGES:
+            имя = стр["slug"] + ".html"
+            with open(os.path.join(КОРЕНЬ, имя), encoding="utf-8") as ф:
+                cls.страницы[имя] = ф.read()
+
+    def test_оговорка_про_демо_на_каждой_странице(self):
+        for имя, текст in self.страницы.items():
+            self.assertIn("клиника вымышленная", текст, имя)
+            self.assertIn("форма ничего не отправляет", текст, имя)
+
+    def test_оговорка_про_не_консультацию_на_каждой_странице(self):
+        for имя, текст in self.страницы.items():
+            self.assertIn("не юридическая консультация", текст, имя)
+
+    def test_ссылки_на_все_документы_с_каждой_страницы(self):
+        for имя, текст in self.страницы.items():
+            for адрес in ("privacy.html", "consent.html", "terms.html", "index.html"):
+                self.assertIn('href="' + адрес + '"', текст, адрес + " не найден в " + имя)
+
+    def test_подвал_содержит_реквизиты(self):
+        данные = build.load_site(КОРЕНЬ)
+        for имя, текст in self.страницы.items():
+            подвал = текст.split('<footer class="podval">')[1]
+            for поле in ("ОПЕРАТОР_КРАТКО", "ИНН", "ОГРН", "АДРЕС", "ТЕЛЕФОН", "EMAIL"):
+                self.assertIn(данные[поле], подвал, поле + " не в подвале " + имя)
+
+    def test_cookie_баннер_есть_и_скрыт_по_умолчанию(self):
+        for имя, текст in self.страницы.items():
+            self.assertIn('class="cookie" hidden', текст, имя)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
