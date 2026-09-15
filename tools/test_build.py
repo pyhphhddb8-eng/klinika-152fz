@@ -132,5 +132,32 @@ class ТестФормы(unittest.TestCase):
             self.assertNotIn(слово, куски, "в форме встретилось «%s»" % слово)
 
 
+class ТестОбъясняющихБлоков(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        build.build_all(КОРЕНЬ)
+        with open(os.path.join(КОРЕНЬ, "index.html"), encoding="utf-8") as ф:
+            cls.текст = ф.read()
+
+    def test_есть_блок_про_лишние_поля(self):
+        self.assertIn('id="pochemu-malo-poley"', self.текст)
+
+    def test_есть_блок_про_место_хранения_заявок(self):
+        self.assertIn('id="kuda-padayut-zayavki"', self.текст)
+
+    def test_названы_негодные_приёмники(self):
+        for сервис in ("Google", "Zapier", "Airtable"):
+            self.assertIn(сервис, self.текст, сервис + " не упомянут")
+
+    def test_названы_годные_приёмники(self):
+        for сервис in ("amoCRM", "Битрикс24"):
+            self.assertIn(сервис, self.текст, сервис + " не упомянут")
+
+    def test_telegram_только_дублирующим(self):
+        self.assertIn("Telegram", self.текст)
+        кусок = self.текст.split("Telegram", 1)[1][:400]
+        self.assertIn("дубл", кусок, "про Telegram не сказано, что он только дублирующий")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

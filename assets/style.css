@@ -270,6 +270,22 @@ a:hover {
   border: 1px solid #9ccdbd;
   border-radius: 8px;
 }
+.razbor {
+  margin-top: 36px;
+  padding: 22px 20px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+}
+.razbor h2 {
+  margin-top: 0;
+}
+.razbor p {
+  margin: 0 0 12px;
+}
+.razbor p:last-child {
+  margin-bottom: 0;
+}
 
 /* Печать: документ должен читаться в PDF, интерфейс — нет. */
 @media print {
