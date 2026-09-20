@@ -1,5 +1,9 @@
 // Проверки в браузере. Запуск: npm run check
-// Поднимает локальный сервер, потому что localStorage не работает при открытии файла с диска.
+//
+// Без аргумента проверяет локальную сборку и сам поднимает сервер: localStorage
+// не работает при открытии файла с диска.
+// С адресом первым аргументом проверяет уже выложенный сайт, ничего локально
+// не поднимая:  node tools/check.mjs https://адрес-сайта/
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import { resolve, dirname } from "node:path";
@@ -7,17 +11,31 @@ import { fileURLToPath } from "node:url";
 
 const КОРЕНЬ = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ПОРТ = 8765;
-const АДРЕС = `http://127.0.0.1:${ПОРТ}/`;
+const аргумент = process.argv[2] || "";
+const ЖИВОЙ = аргумент.startsWith("http");
+const АДРЕС = ЖИВОЙ
+  ? аргумент.endsWith("/")
+    ? аргумент
+    : аргумент + "/"
+  : `http://127.0.0.1:${ПОРТ}/`;
 // Список страниц используется и в цикле проверок, и в проверке ссылок —
 // держим один источник правды.
 const СТРАНИЦЫ = ["index.html", "privacy.html", "consent.html", "terms.html"];
 
-const сервер = spawn(
-  "python3",
-  ["-m", "http.server", String(ПОРТ), "--bind", "127.0.0.1"],
-  { cwd: КОРЕНЬ, stdio: "ignore" },
+// Свой сервер поднимаем только для локальной сборки. Для живого адреса его
+// нет — и убивать в конце тоже нечего.
+const сервер = ЖИВОЙ
+  ? null
+  : spawn(
+      "python3",
+      ["-m", "http.server", String(ПОРТ), "--bind", "127.0.0.1"],
+      { cwd: КОРЕНЬ, stdio: "ignore" },
+    );
+if (!ЖИВОЙ) await new Promise((р) => setTimeout(р, 700));
+console.log(
+  (ЖИВОЙ ? "Проверяю выложенный сайт: " : "Проверяю локальную сборку: ") +
+    АДРЕС,
 );
-await new Promise((р) => setTimeout(р, 700));
 
 const провалы = [];
 const browser = await chromium.launch();
@@ -222,7 +240,7 @@ try {
   }
 } finally {
   await browser.close();
-  сервер.kill();
+  if (сервер) сервер.kill();
 }
 
 if (провалы.length) {

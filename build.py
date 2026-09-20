@@ -6,7 +6,6 @@ import json
 import os
 import re
 import shutil
-import sys
 
 ПЛЕЙСХОЛДЕР = re.compile(r"\{\{([A-ZА-Я_]+)\}\}")
 

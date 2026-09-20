@@ -1,11 +1,50 @@
 # Тесты сборщика. Запуск: python3 tools/test_build.py -v
 import os
+import shutil
 import sys
+import tempfile
 import unittest
 
 КОРЕНЬ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, КОРЕНЬ)
 import build
+
+# Файлы, которые создаёт сборщик и которые лежат в репозитории: именно они
+# публикуются как сайт.
+СОБРАННЫЕ = (
+    "index.html",
+    "privacy.html",
+    "consent.html",
+    "terms.html",
+    "assets/style.css",
+    "assets/fonts.css",
+)
+
+
+def _байты(путь):
+    with open(путь, "rb") as ф:
+        return ф.read()
+
+
+def _первое_отличие(в_репозитории, из_сборки):
+    """Первая разошедшаяся строка: сравнение побайтное, но читать удобнее так."""
+    а = в_репозитории.decode("utf-8", "replace").splitlines()
+    б = из_сборки.decode("utf-8", "replace").splitlines()
+    for номер, (строка_а, строка_б) in enumerate(zip(а, б), 1):
+        if строка_а != строка_б:
+            return (
+                "строка %d\n"
+                "      в репозитории: %s\n"
+                "      после сборки:  %s"
+                % (номер, строка_а.strip()[:110], строка_б.strip()[:110])
+            )
+    return "разная длина: в репозитории %d строк, после сборки %d" % (len(а), len(б))
+
+
+# Снимок делаем при импорте модуля, до первого теста: остальные классы
+# вызывают build_all(КОРЕНЬ) и перезаписывают корень, после чего устаревание
+# закоммиченных файлов увидеть уже невозможно.
+СНИМОК = {имя: _байты(os.path.join(КОРЕНЬ, *имя.split("/"))) for имя in СОБРАННЫЕ}
 
 
 class ТестПодстановки(unittest.TestCase):
@@ -127,8 +166,10 @@ class ТестФормы(unittest.TestCase):
         self.assertNotIn("fetch(", self.текст)
 
     def test_нет_полей_про_здоровье(self):
-        куски = self.текст.split("<form")[1].split("</form>")[0]
-        for слово in ("жалоб", "симптом", "диагноз", "болезн", "рожден", "паспорт", "СНИЛС", "полис"):
+        # Регистр не учитываем: «СНИЛС», name="snils" и подпись «Снилс» — одно и то же.
+        # Список слов держим таким же, как в tools/check.mjs.
+        куски = self.текст.split("<form")[1].split("</form>")[0].lower()
+        for слово in ("жалоб", "симптом", "диагноз", "болезн", "рожден", "паспорт", "снилс", "полис"):
             self.assertNotIn(слово, куски, "в форме встретилось «%s»" % слово)
 
 
@@ -218,6 +259,40 @@ class ТестТекстов(unittest.TestCase):
 
     def test_соглашение_описывает_услугу_записи(self):
         self.assertIn("запис", self.тексты["terms.html"].lower())
+
+
+class ТестСобранноеНеУстарело(unittest.TestCase):
+    """Публикуется собранный файл из корня, а не content/. Если его забыли
+    пересобрать после правки исходников, сайт уедет со старым текстом —
+    остальные тесты этого не заметят, потому что сами пересобирают корень."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.врем = tempfile.mkdtemp(prefix="klinika-sborka-")
+        shutil.copytree(
+            os.path.join(КОРЕНЬ, "content"), os.path.join(cls.врем, "content")
+        )
+        # Сборщик вшивает шрифт из assets/fonts — кладём его рядом.
+        shutil.copytree(
+            os.path.join(КОРЕНЬ, "assets", "fonts"),
+            os.path.join(cls.врем, "assets", "fonts"),
+        )
+        build.build_all(cls.врем)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.врем, ignore_errors=True)
+
+    def test_закоммиченные_файлы_совпадают_со_сборкой(self):
+        for имя in СОБРАННЫЕ:
+            свежий = _байты(os.path.join(self.врем, *имя.split("/")))
+            if СНИМОК[имя] == свежий:
+                continue
+            self.fail(
+                "%s разошёлся с исходниками в content/: %s\n"
+                "    Выполните «npm run build» и закоммитьте пересобранные файлы."
+                % (имя, _первое_отличие(СНИМОК[имя], свежий))
+            )
 
 
 if __name__ == "__main__":

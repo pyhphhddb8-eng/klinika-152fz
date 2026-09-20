@@ -289,10 +289,11 @@ a:hover {
 
 /* Печать: документ должен читаться в PDF, интерфейс — нет. */
 @media print {
+  /* .demo-note не прячем: из PDF не должно пропасть предупреждение,
+     что клиника вымышленная, а реквизиты условные. */
   .shapka,
   .cookie,
-  .zapis__forma,
-  .demo-note {
+  .zapis__forma {
     display: none !important;
   }
   body {
@@ -310,10 +311,5 @@ a:hover {
   .stranica p,
   .stranica li {
     page-break-inside: avoid;
-  }
-  a[href^="http"]::after {
-    content: " (" attr(href) ")";
-    font-size: 10pt;
-    color: #444;
   }
 }
