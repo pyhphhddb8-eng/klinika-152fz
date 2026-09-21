@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{ЗАГОЛОВОК}} — {{НАЗВАНИЕ}}</title>
+<meta name="description" content="{{ОПИСАНИЕ}}">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<p class="demo-note">Демонстрационный сайт: клиника вымышленная, реквизиты условные, форма ничего не отправляет.</p>
+
+<header class="shapka">
+  <a class="shapka__logo" href="index.html">{{НАЗВАНИЕ}}</a>
+</header>
+
+<main class="stranica">
+{{СОДЕРЖИМОЕ}}
+<p class="pravovaya-ogovorka">Это типовой комплект документов, а не юридическая консультация. Требования меняются, спорные места и всё, что касается конкретной деятельности клиники, смотрит её юрист.</p>
+</main>
+
+<footer class="podval">
+  <p class="podval__rekvizity">{{ОПЕРАТОР}}<br>
+  ИНН {{ИНН}}, ОГРН {{ОГРН}}<br>
+  {{АДРЕС}}<br>
+  <a href="tel:{{ТЕЛЕФОН_TEL}}">{{ТЕЛЕФОН}}</a>, <a href="mailto:{{EMAIL}}">{{EMAIL}}</a><br>
+  Медицинская лицензия: {{ЛИЦЕНЗИЯ}}</p>
+  <nav class="podval__ssylki">
+    <a href="index.html">Запись на приём</a>
+    <a href="{{ССЫЛКА_ПОЛИТИКА}}">Политика обработки персональных данных</a>
+    <a href="{{ССЫЛКА_СОГЛАСИЕ}}">Согласие на обработку</a>
+    <a href="{{ССЫЛКА_СОГЛАШЕНИЕ}}">Пользовательское соглашение</a>
+  </nav>
+  <p class="podval__god">© {{ГОД}} {{ОПЕРАТОР_КРАТКО}}. Реквизиты условные: компании не существует.</p>
+</footer>
+
+<div class="cookie" hidden>
+  <p>Сайт не использует cookie и не собирает статистику. Чтобы не показывать это уведомление при каждом заходе, браузер сохранит одну техническую запись в локальном хранилище. Подробнее — в <a href="{{ССЫЛКА_ПОЛИТИКА}}">политике обработки персональных данных</a>.</p>
+  <button type="button" id="cookie-soglasen">Понятно</button>
+</div>
+
+<script>
+// Уведомление внизу страницы: показываем один раз. Ключ cookie-ok в локальном
+// хранилище и есть единственное, что сайт сохраняет в браузере. Хранилище может
+// быть недоступно (приватное окно, открытие файла с диска) — тогда не показываем.
+(function () {
+  var баннер = document.querySelector('.cookie');
+  var кнопка = document.getElementById('cookie-soglasen');
+  var КЛЮЧ = 'cookie-ok';
+  var хранилище = null;
+  try { хранилище = window.localStorage; хранилище.getItem(КЛЮЧ); } catch (e) { хранилище = null; }
+  if (!хранилище || хранилище.getItem(КЛЮЧ) === '1') { return; }
+  баннер.hidden = false;
+  кнопка.addEventListener('click', function () {
+    баннер.hidden = true;
+    try { хранилище.setItem(КЛЮЧ, '1'); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

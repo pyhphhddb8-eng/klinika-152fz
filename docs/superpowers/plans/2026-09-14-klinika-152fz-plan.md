@@ -164,6 +164,7 @@ if __name__ == "__main__":
   "АДРЕС": "000000, г. Москва, ул. Вымышленная, д. 1, пом. 1",
   "EMAIL": "info@klinika-yasen.example",
   "ТЕЛЕФОН": "+7 (495) 000-00-00",
+  "ТЕЛЕФОН_TEL": "+74950000000",
   "САЙТ": "pyhphhddb8-eng.github.io/klinika-152fz",
   "ДАТА": "14 сентября 2026 г.",
   "ЛИЦЕНЗИЯ": "Л00-00000-00/00000000 (условный номер, лицензии не существует)",
@@ -377,7 +378,7 @@ class ТестШрифта(unittest.TestCase):
             with open(os.path.join(КОРЕНЬ, имя), encoding="utf-8") as ф:
                 текст = ф.read()
             self.assertNotIn("http://", текст, имя)
-            self.assertNotIn("https://fonts.", текст, имя)
+            self.assertNotIn("https://", текст, имя)
         self.assertNotIn("http", self.css.replace("data:font", ""))
 
     def test_шрифт_не_раздут(self):
@@ -646,7 +647,7 @@ class ТестОбщихБлоков(unittest.TestCase):
   <p class="podval__rekvizity">{{ОПЕРАТОР}}<br>
   ИНН {{ИНН}}, ОГРН {{ОГРН}}<br>
   {{АДРЕС}}<br>
-  <a href="tel:+74950000000">{{ТЕЛЕФОН}}</a>, <a href="mailto:{{EMAIL}}">{{EMAIL}}</a><br>
+  <a href="tel:{{ТЕЛЕФОН_TEL}}">{{ТЕЛЕФОН}}</a>, <a href="mailto:{{EMAIL}}">{{EMAIL}}</a><br>
   Медицинская лицензия: {{ЛИЦЕНЗИЯ}}</p>
   <nav class="podval__ssylki">
     <a href="index.html">Запись на приём</a>
@@ -863,7 +864,7 @@ npm run check
 
 <p class="lid">Оставьте имя и телефон — администратор перезвонит, подберёт врача и подтвердит время. Ни жалоб, ни диагнозов на сайте: об этом поговорим на приёме.</p>
 
-<form class="zapis__forma" id="zapis" novalidate>
+<form class="zapis__forma" id="zapis">
   <div class="pole">
     <label for="imya">Как к вам обращаться</label>
     <input type="text" id="imya" name="imya" autocomplete="name" placeholder="Иван Петров" required>
@@ -1004,8 +1005,8 @@ class ТестФормы(unittest.TestCase):
         self.assertNotIn("fetch(", self.текст)
 
     def test_нет_полей_про_здоровье(self):
-        for слово in ("жалоб", "симптом", "диагноз", "паспорт", "СНИЛС", "полис"):
-            куски = self.текст.split("<form")[1].split("</form>")[0]
+        куски = self.текст.split("<form")[1].split("</form>")[0]
+        for слово in ("жалоб", "симптом", "диагноз", "болезн", "рожден", "паспорт", "СНИЛС", "полис"):
             self.assertNotIn(слово, куски, "в форме встретилось «%s»" % слово)
 ```
 
