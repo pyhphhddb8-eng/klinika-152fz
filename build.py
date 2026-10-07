@@ -64,23 +64,28 @@ def читать(путь):
 
 
 def build_fonts_css(root):
-    """Вшивает подрезанный шрифт в CSS строкой base64: страница не ходит наружу."""
-    путь_шрифта = os.path.join(root, "assets", "fonts", "golos-text.woff2")
-    with open(путь_шрифта, "rb") as ф:
-        строка = base64.b64encode(ф.read()).decode("ascii")
-    css = (
-        "/* Golos Text, лицензия OFL — текст в assets/fonts/src/OFL.txt.\n"
+    """Вшивает подрезанные шрифты в CSS строкой base64: страница не ходит наружу."""
+    правила = [
+        "/* Wix Madefor Text и Display, лицензия OFL — текст в assets/fonts/src/OFL.txt.\n"
         "   Файл создаётся сборщиком, править руками бессмысленно. */\n"
-        "@font-face{\n"
-        "  font-family:'Golos Text';\n"
-        "  src:url(data:font/woff2;base64,%s) format('woff2');\n"
-        "  font-weight:400 700;\n"
-        "  font-display:swap;\n"
-        "}\n" % строка
-    )
+    ]
+    for семейство, файл, толщина in (
+        ("Wix Madefor Text", "wix-madefor-text.woff2", "400 600"),
+        ("Wix Madefor Display", "wix-madefor-display.woff2", "700"),
+    ):
+        with open(os.path.join(root, "assets", "fonts", файл), "rb") as ф:
+            строка = base64.b64encode(ф.read()).decode("ascii")
+        правила.append(
+            "@font-face{\n"
+            "  font-family:'%s';\n"
+            "  src:url(data:font/woff2;base64,%s) format('woff2');\n"
+            "  font-weight:%s;\n"
+            "  font-display:swap;\n"
+            "}\n" % (семейство, строка, толщина)
+        )
     путь = os.path.join(root, "assets", "fonts.css")
     with open(путь, "w", encoding="utf-8") as ф:
-        ф.write(css)
+        ф.write("".join(правила))
     return путь
 
 

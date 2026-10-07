@@ -108,8 +108,9 @@ class ТестШрифта(unittest.TestCase):
         self.assertNotIn("http", self.css.replace("data:font", ""))
 
     def test_шрифт_не_раздут(self):
-        размер = os.path.getsize(os.path.join(КОРЕНЬ, "assets", "fonts", "golos-text.woff2"))
-        self.assertLess(размер, 120 * 1024, "подрезка не сработала, шрифт %d байт" % размер)
+        for файл in ("wix-madefor-text.woff2", "wix-madefor-display.woff2"):
+            размер = os.path.getsize(os.path.join(КОРЕНЬ, "assets", "fonts", файл))
+            self.assertLess(размер, 60 * 1024, "подрезка не сработала, %s %d байт" % (файл, размер))
 
 
 class ТестОбщихБлоков(unittest.TestCase):
@@ -129,7 +130,7 @@ class ТестОбщихБлоков(unittest.TestCase):
 
     def test_оговорка_про_не_консультацию_на_каждой_странице(self):
         for имя, текст in self.страницы.items():
-            self.assertIn("не юридическая консультация", текст, имя)
+            self.assertIn("юридическую консультацию он не заменяет", текст, имя)
 
     def test_ссылки_на_все_документы_с_каждой_страницы(self):
         for имя, текст in self.страницы.items():
